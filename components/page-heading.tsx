@@ -1,0 +1,1 @@
+export function PageHeading({title,description}:{title:string;description:string}){return <div className="mb-6"><h1 className="western text-4xl font-bold">{title}</h1><p className="mt-2 text-[var(--muted)]">{description}</p></div>}

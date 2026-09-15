@@ -1,0 +1,3 @@
+import type { Metadata } from "next"; import { SessionCard } from "@/components/session-card"; import { publishedSessions } from "@/lib/data";
+export const metadata:Metadata={title:"Classes",description:"Book country dance classes at Spurs Over Stetsons."};
+export default async function Classes(){const data=await publishedSessions();return <section className="wrap py-14"><h1 className="western text-5xl font-bold">Dance classes</h1><p className="mb-8 mt-3 max-w-2xl text-[var(--muted)]">Build confidence with country swing, two-step, line dancing, and special workshops.</p><div className="grid gap-4">{data.map(s=><SessionCard key={s.id} session={s as never}/>)}{!data.length&&<div className="empty">No published classes are currently available.</div>}</div></section>}

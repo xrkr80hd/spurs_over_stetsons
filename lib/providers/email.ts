@@ -1,0 +1,3 @@
+import {Resend} from "resend";
+export type SendResult={ok:boolean;providerId?:string;error?:string};
+export async function sendEmail(input:{to:string;subject:string;message:string;idempotencyKey:string}):Promise<SendResult>{const key=process.env.RESEND_API_KEY;const from=process.env.RESEND_FROM_EMAIL;if(!key||!from)return {ok:false,error:"Resend is not configured."};try{const resend=new Resend(key);const {data,error}=await resend.emails.send({from,to:input.to,subject:input.subject,text:input.message},{headers:{"Idempotency-Key":input.idempotencyKey}});if(error)return {ok:false,error:error.message};return {ok:true,providerId:data?.id};}catch(e){return {ok:false,error:e instanceof Error?e.message:"Email provider error"};}}
