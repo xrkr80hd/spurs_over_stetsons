@@ -4,7 +4,7 @@ Production rebuild of the Spurs Over Stetsons website and class-management syste
 
 ## Source prototype
 
-The approved working prototype is preserved under `/prototype` and should be treated as the workflow/design reference while the application is rebuilt for production.
+The approved source prototype is the uploaded `Spurs-Over-Stetsons-Prototype.zip` from the project chat. Treat that ZIP as the workflow/design reference while rebuilding the application for production. The original prototype is a single-browser/localStorage demo and must not be shipped as the production backend.
 
 ## Target stack
 
