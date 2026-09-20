@@ -1,3 +1,15 @@
-import type {Metadata} from "next"; import {publicInstructors} from "@/lib/data";
-export const metadata:Metadata={title:"Instructors"};
-export default async function Instructors(){const data=await publicInstructors();return <section className="wrap py-14"><h1 className="western text-5xl font-bold">Meet the instructors</h1><p className="mb-8 mt-3 text-[var(--muted)]">Friendly instruction for every experience level.</p><div className="grid gap-5 md:grid-cols-3">{(data as any[]).map(i=><article key={i.id} className="panel p-6"><div className="mb-5 grid aspect-square place-items-center rounded-xl bg-[#211b17] text-5xl">♞</div><h2 className="western text-2xl font-bold">{i.public_name}</h2><p className="mt-2 text-sm text-[var(--accent2)]">{i.dance_styles?.join(" · ")}</p><p className="mt-3 leading-7 text-[var(--muted)]">{i.bio}</p></article>)}{!data.length&&<div className="empty md:col-span-3">Instructor profiles are coming soon.</div>}</div></section>}
+import type { Metadata } from "next";
+import Link from "next/link";
+
+export const metadata: Metadata = { title: "Instructors" };
+
+export default function ComingSoonPage() {
+  return (
+    <section className="coming-page">
+      <p className="landing-eyebrow">COMING SOON</p>
+      <h1>Instructors are on the way.</h1>
+      <p>We&apos;re preparing everything now. Check back soon for updates from Spurs Over Stetsons.</p>
+      <Link href="/" className="landing-action">Back Home <span aria-hidden="true">→</span></Link>
+    </section>
+  );
+}

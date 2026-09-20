@@ -1,1 +1,11 @@
-export function PublicFooter(){return <footer className="border-t border-[var(--line)] px-4 py-9 text-center text-sm text-[var(--muted)]"><strong className="text-white">Spurs Over Stetsons</strong><br/>Alexandria, Louisiana · Country dance classes and community events</footer>}
+const CONTACT_EMAIL = "spursoverstetsonsla@gmail.com";
+
+export function PublicFooter() {
+  return (
+    <footer className="public-footer">
+      <p>Spurs Over Stetsons Dance Hall</p>
+      <span>Alexandria, Louisiana</span>
+      <small><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></small>
+    </footer>
+  );
+}

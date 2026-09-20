@@ -1,3 +1,15 @@
-import type { Metadata } from "next"; import { SessionCard } from "@/components/session-card"; import { publishedSessions } from "@/lib/data";
-export const metadata:Metadata={title:"Classes",description:"Book country dance classes at Spurs Over Stetsons."};
-export default async function Classes(){const data=await publishedSessions();return <section className="wrap py-14"><h1 className="western text-5xl font-bold">Dance classes</h1><p className="mb-8 mt-3 max-w-2xl text-[var(--muted)]">Build confidence with country swing, two-step, line dancing, and special workshops.</p><div className="grid gap-4">{data.map(s=><SessionCard key={s.id} session={s as never}/>)}{!data.length&&<div className="empty">No published classes are currently available.</div>}</div></section>}
+import type { Metadata } from "next";
+import Link from "next/link";
+
+export const metadata: Metadata = { title: "Classes" };
+
+export default function ComingSoonPage() {
+  return (
+    <section className="coming-page">
+      <p className="landing-eyebrow">COMING SOON</p>
+      <h1>Classes are on the way.</h1>
+      <p>We&apos;re preparing everything now. Check back soon for updates from Spurs Over Stetsons.</p>
+      <Link href="/" className="landing-action">Back Home <span aria-hidden="true">→</span></Link>
+    </section>
+  );
+}

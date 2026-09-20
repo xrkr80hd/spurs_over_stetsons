@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
-:root { --bg:#080706; --panel:#342d27; --panel2:#40372f; --line:#55483d; --text:#f6edde; --muted:#c5b6a3; --accent:#b77a42; --accent2:#d6a06b; }
-* { box-sizing:border-box; }
-html { background:var(--bg); color:var(--text); }
-body { margin:0; min-height:100vh; font-family:Arial,Helvetica,sans-serif; background:radial-gradient(circle at 50% -10%,#5a38242b,transparent 35%),var(--bg); }
-a { color:inherit; text-decoration:none; }
-button,input,select,textarea { font:inherit; }
-.wrap { width:min(1180px,calc(100% - 32px)); margin-inline:auto; }
-.western { font-family:Georgia,"Times New Roman",serif; }
-.panel { background:var(--panel); border:1px solid var(--line); border-radius:18px; box-shadow:0 16px 48px #0005; }
-.btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height:42px; padding:.65rem 1rem; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--text); font-weight:700; cursor:pointer; }
-.btn:hover { border-color:var(--accent2); }
-.btn-primary { background:var(--accent); border-color:var(--accent); color:#130f0b; }
-.btn-danger { color:#ffc5c5; border-color:#854545; }
-.field { display:grid; gap:.4rem; }
-.field label { color:var(--muted); font-size:.8rem; }
-.field input,.field select,.field textarea { width:100%; color:var(--text); background:#211b17; border:1px solid var(--line); border-radius:10px; padding:.72rem; }
-.table-wrap { overflow:auto; }
-table { width:100%; border-collapse:collapse; min-width:720px; }
-th,td { padding:.8rem; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
-th { color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; }
-.tag { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:.22rem .5rem; color:var(--muted); font-size:.75rem; }
-.empty { border:1px dashed var(--line); border-radius:14px; padding:2rem; text-align:center; color:var(--muted); }
-.dashboard-grid { display:grid; grid-template-columns:230px minmax(0,1fr); min-height:calc(100vh - 65px); }
-@media(max-width:800px){ .dashboard-grid{grid-template-columns:1fr}.dashboard-nav{display:flex;overflow:auto;border-right:0!important;border-bottom:1px solid var(--line)} table{min-width:620px} }
+:root{--bg:#0d0c0a;--panel:#342d27;--panel2:#40372f;--line:#493720;--text:#f1e7d3;--muted:#b8aa95;--accent:#bd8948;--accent2:#d6a06b;--paper:#eee4d0}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg);color:var(--text)}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+.wrap{width:min(1180px,calc(100% - 32px));margin-inline:auto}
+.western{font-family:Georgia,"Times New Roman",serif}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 48px #0005}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:42px;padding:.65rem 1rem;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:700;cursor:pointer}
+.btn:hover{border-color:var(--accent2)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#130f0b}
+.btn-danger{color:#ffc5c5;border-color:#854545}
+.field{display:grid;gap:.4rem}.field label{color:var(--muted);font-size:.8rem}.field input,.field select,.field textarea{width:100%;color:var(--text);background:#211b17;border:1px solid var(--line);border-radius:10px;padding:.72rem}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:720px}th,td{padding:.8rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
+.tag{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:.22rem .5rem;color:var(--muted);font-size:.75rem}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:2rem;text-align:center;color:var(--muted)}
+.dashboard-grid{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100vh - 65px)}
+
+.public-site-header{height:88px;padding:0 6vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3a2d1d;background:#0d0c0af2;position:absolute;inset:0 0 auto;z-index:30}
+.public-site-header>a img{width:auto;height:76px;object-fit:contain}
+.public-site-header nav{display:flex;align-items:center;gap:26px}
+.public-site-header nav>a:first-child{text-transform:uppercase;letter-spacing:.16rem;font-size:.78rem;font-weight:800;border-bottom:1px solid var(--accent);padding:10px 0}
+.staff-link{color:var(--muted);font-size:.85rem}
+
+.landing-eyebrow{color:var(--accent);font-size:.75rem;letter-spacing:.22rem;font-weight:800;margin:0 0 20px}
+.landing-action{min-height:50px;background:var(--accent);color:#120e0a;padding:0 20px;display:inline-flex;align-items:center;justify-content:space-between;gap:28px;font-weight:800;border:1px solid var(--accent);transition:filter .2s ease,transform .2s ease}
+.landing-action:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.landing-action:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.landing-hero{min-height:760px;display:grid;grid-template-columns:48% 52%;background:#110e0b}
+.landing-copy{padding:180px 6vw 90px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.landing-copy h1{font:400 clamp(4.2rem,7.2vw,7.2rem)/.88 Georgia,serif;letter-spacing:-.32rem;margin:0 0 34px}
+.landing-copy h1 em{color:var(--accent);font-weight:400}
+.landing-intro{max-width:570px;color:#cdc0ad;font:1.25rem/1.7 Georgia,serif;margin:0 0 34px}
+.landing-copy small{display:block;color:#9d907d;font-size:.82rem;line-height:1.5;margin-top:18px;max-width:410px}
+.landing-image{min-height:760px;background:linear-gradient(90deg,#110e0b 0%,transparent 32%),linear-gradient(0deg,#0e0c0888,transparent 65%),url('/dance-hall-reference.webp') 75% center/cover no-repeat}
+.landing-offer{background:var(--paper);color:#1a140e;padding:105px 7vw}
+.landing-offer>.landing-eyebrow{text-align:center}
+.landing-offer>h2{text-align:center;font:400 clamp(2.5rem,5vw,4.6rem)/1 Georgia,serif;letter-spacing:-.15rem;max-width:980px;margin:0 auto 65px}
+.landing-cards{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #c6b699;border-bottom:1px solid #c6b699}
+.landing-cards article{padding:42px 34px;min-height:225px;border-right:1px solid #c6b699}
+.landing-cards article:last-child{border-right:0}
+.landing-cards span{color:#94672f;font-size:.75rem;letter-spacing:.16rem}
+.landing-cards h3{font:2rem Georgia,serif;margin:24px 0 12px}
+.landing-cards p{color:#72634f;line-height:1.7;font-size:1rem;margin:0}
+.landing-coming{padding:80px 7vw;display:grid;grid-template-columns:170px 1fr auto;gap:55px;align-items:center;background:#19120c;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.landing-coming>img{width:160px;height:auto}
+.landing-coming h2{font:400 clamp(2rem,4vw,3.5rem)/1.05 Georgia,serif;margin:0 0 14px}
+.landing-coming div>p:last-child{color:var(--muted);line-height:1.6;margin:0}
+.public-footer{min-height:110px;padding:30px 7vw;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;color:#8e826f;font-size:.88rem}
+.public-footer p{color:var(--text);font:1.1rem Georgia,serif}
+.public-footer span{text-align:center}.public-footer small{text-align:right}
+.coming-page{min-height:76vh;padding:180px max(7vw,24px) 90px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;background:radial-gradient(circle at 75% 20%,#6a43272c,transparent 38%),#110e0b}
+.coming-page h1{font:400 clamp(3rem,7vw,6rem)/.95 Georgia,serif;letter-spacing:-.18rem;margin:0 0 24px;max-width:900px}
+.coming-page>p:not(.landing-eyebrow){color:var(--muted);font-size:1.15rem;line-height:1.7;max-width:620px;margin:0 0 30px}
+
+@media(max-width:900px){.landing-hero{grid-template-columns:1fr}.landing-copy{padding:150px 7vw 75px}.landing-image{min-height:430px;background:linear-gradient(0deg,#0e0c08aa,transparent 65%),url('/dance-hall-reference.webp') 75% center/cover no-repeat}.landing-cards{grid-template-columns:1fr}.landing-cards article{border-right:0;border-bottom:1px solid #c6b699;min-height:auto}.landing-cards article:last-child{border-bottom:0}.landing-coming{grid-template-columns:1fr;text-align:center;justify-items:center;gap:25px}.landing-coming>img{width:130px}.public-footer{grid-template-columns:1fr;text-align:center;gap:5px}.public-footer p{margin-bottom:5px}.public-footer span,.public-footer small{text-align:center}.dashboard-grid{grid-template-columns:1fr}.dashboard-nav{display:flex;overflow:auto;border-right:0!important;border-bottom:1px solid var(--line)}table{min-width:620px}}
+@media(max-width:560px){.public-site-header{height:74px;padding:0 18px}.public-site-header>a img{height:62px}.public-site-header nav>a:first-child{display:none}.staff-link{font-size:.78rem}.landing-copy{padding:130px 22px 65px}.landing-copy h1{font-size:3.75rem;letter-spacing:-.22rem}.landing-intro{font-size:1.08rem}.landing-image{min-height:330px}.landing-offer,.landing-coming{padding:72px 22px}.landing-offer>h2{letter-spacing:-.08rem;margin-bottom:45px}.landing-cards article{padding:30px 20px}.landing-action{width:100%;max-width:360px}.landing-coming .landing-action{width:100%}}
