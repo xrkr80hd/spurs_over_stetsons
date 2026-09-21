@@ -1,1 +1,2 @@
-import {AuthForm} from "@/components/auth-form"; export const metadata={title:"Login",robots:{index:false,follow:false}}; export default function Login(){return <main className="grid min-h-screen place-items-center px-4 py-12"><AuthForm/></main>}
+import { redirect } from "next/navigation";
+export default function LegacyLoginPage(){redirect("/admin");}

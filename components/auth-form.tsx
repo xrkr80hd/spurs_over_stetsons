@@ -1,8 +1,10 @@
 "use client";
-import {useActionState,useState} from "react"; import {signIn,signUp,type AuthState} from "@/app/auth/actions";
-const initial:AuthState={};
-export function AuthForm(){const [mode,setMode]=useState<"login"|"signup">("login");return mode==="login"?<Login onSwitch={()=>setMode("signup")}/>:<Signup onSwitch={()=>setMode("login")}/>}
-function Fields({signup}:{signup:boolean}){return <>{signup&&<><div className="field"><label>Full name</label><input name="full_name" required/></div><div className="field"><label>Phone</label><input name="phone" type="tel" required/></div></>}<div className="field"><label>Email</label><input name="email" type="email" required/></div><div className="field"><label>Password</label><input name="password" type="password" minLength={8} required/></div></>}
-function Shell({signup,state,pending,action,onSwitch}:{signup:boolean;state:AuthState;pending:boolean;action:(payload:FormData)=>void;onSwitch:()=>void}){return <div className="panel w-full max-w-lg p-7"><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--accent2)]">Secure account</p><h1 className="western my-2 text-4xl font-bold">{signup?"Create your account":"Welcome back"}</h1><p className="mb-6 text-sm text-[var(--muted)]">{signup?"Students can book and manage their own classes.":"Sign in to your dashboard."}</p><form action={action} className="grid gap-4"><Fields signup={signup}/>{state.error&&<p role="alert" className="text-sm text-red-300">{state.error}</p>}{state.success&&<p className="text-sm text-green-300">{state.success}</p>}<button className="btn btn-primary" disabled={pending}>{pending?"Working…":signup?"Create account":"Sign in"}</button></form><button onClick={onSwitch} className="mt-4 w-full text-sm text-[var(--accent2)]">{signup?"Already have an account? Sign in":"New student? Create an account"}</button></div>}
-function Login({onSwitch}:{onSwitch:()=>void}){const [state,action,pending]=useActionState(signIn,initial);return <Shell signup={false} state={state} pending={pending} action={action} onSwitch={onSwitch}/>}
-function Signup({onSwitch}:{onSwitch:()=>void}){const [state,action,pending]=useActionState(signUp,initial);return <Shell signup state={state} pending={pending} action={action} onSwitch={onSwitch}/>}
+import { useActionState } from "react";
+import { signIn, type AuthState } from "@/app/auth/actions";
+
+const initial: AuthState = {};
+
+export function AuthForm() {
+  const [state, action, pending] = useActionState(signIn, initial);
+  return <div className="panel w-full max-w-lg p-7"><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--accent2)]">Authorized access</p><h1 className="western my-2 text-4xl font-bold">Admin login</h1><p className="mb-6 text-sm text-[var(--muted)]">Sign in to manage Spurs Over Stetsons.</p><form action={action} className="grid gap-4"><div className="field"><label>Email</label><input name="email" type="email" autoComplete="username" required /></div><div className="field"><label>Password</label><input name="password" type="password" autoComplete="current-password" required /></div>{state.error&&<p role="alert" className="text-sm text-red-300">{state.error}</p>}<button className="btn btn-primary" disabled={pending}>{pending?"Signing in…":"Sign in"}</button></form></div>;
+}
