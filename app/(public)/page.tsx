@@ -1,7 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
-
-const EBALLROOM_URL = "https://www.eballroom.com";
+const REGISTRATION_URL = "https://my.e-ballroom.com/register?studio=4b9f0d88-9edc-4390-8998-93937355999e";
+const LOGIN_URL = "https://my.e-ballroom.com/login";
 
 export default function HomePage() {
   return <>
@@ -11,10 +10,10 @@ export default function HomePage() {
         <h1>Let&apos;s<br/><em>dance.</em></h1>
         <p className="landing-intro">Country dance lessons and a welcoming dance-floor experience for beginners, seasoned dancers, and everyone in between.</p>
         <div className="landing-actions">
-          <Link className="landing-action" href="/signup">Sign Up <span aria-hidden="true">→</span></Link>
-          <a className="landing-secondary" href={EBALLROOM_URL} target="_blank" rel="noreferrer">eBallroom Login ↗</a>
+          <a className="landing-action" href={REGISTRATION_URL} target="_blank" rel="noreferrer">Sign Up <span aria-hidden="true">→</span></a>
+          <a className="landing-secondary" href={LOGIN_URL} target="_blank" rel="noreferrer">Login ↗</a>
         </div>
-        <small>Send us your information to get started. Once your account is ready, you&apos;ll use eBallroom to log in.</small>
+        <small>Create your account to get started. Then return anytime to log in.</small>
       </div>
       <div className="landing-image" role="img" aria-label="Warm country dance hall"/>
     </section>
@@ -29,8 +28,8 @@ export default function HomePage() {
     </section>
     <section className="landing-coming">
       <Image src="/spurs-over-stetsons-logo.webp" alt="" aria-hidden="true" width={720} height={720}/>
-      <div><p className="landing-eyebrow">GET STARTED</p><h2>Ready to join us?</h2><p>Send us your information and our staff will help set up your eBallroom account.</p></div>
-      <Link className="landing-action" href="/signup">Sign Up <span aria-hidden="true">→</span></Link>
+      <div><p className="landing-eyebrow">GET STARTED</p><h2>Ready to join us?</h2><p>Create your account and take your first step onto the dance floor.</p></div>
+      <a className="landing-action" href={REGISTRATION_URL} target="_blank" rel="noreferrer">Sign Up <span aria-hidden="true">→</span></a>
     </section>
   </>;
 }

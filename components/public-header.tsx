@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const EBALLROOM_URL = "https://www.eballroom.com";
+const LOGIN_URL = "https://my.e-ballroom.com/login";
 
 export function PublicHeader() {
   return (
@@ -10,7 +10,7 @@ export function PublicHeader() {
         <Image src="/spurs-over-stetsons-logo.webp" alt="Spurs Over Stetsons Dance Hall" width={720} height={720} priority />
       </Link>
       <nav aria-label="Main navigation">
-        <a href={EBALLROOM_URL} target="_blank" rel="noreferrer">eBallroom Login</a>
+        <a href={LOGIN_URL} target="_blank" rel="noreferrer">Login</a>
       </nav>
     </header>
   );
