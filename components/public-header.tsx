@@ -10,6 +10,7 @@ export function PublicHeader() {
         <Image src="/spurs-over-stetsons-logo.webp" alt="Spurs Over Stetsons Dance Hall" width={720} height={720} priority />
       </Link>
       <nav aria-label="Main navigation">
+        <Link href="/#calendar">Calendar</Link>
         <a href={LOGIN_URL} target="_blank" rel="noreferrer">Login</a>
       </nav>
     </header>

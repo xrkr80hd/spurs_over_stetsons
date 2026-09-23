@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+.public-calendar{padding:80px 7vw;scroll-margin-top:24px;background:#19120c}
+.public-calendar h2{font:400 clamp(2.5rem,5vw,4.6rem)/1.1 Georgia,serif;margin:0 0 20px}
+.public-calendar>p:not(.landing-eyebrow){color:var(--muted);line-height:1.6}
+.calendar-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:32px 0 20px;flex-wrap:wrap}
+.calendar-toolbar h3{font:1.6rem Georgia,serif;margin:0}
+.calendar-toolbar>div{display:flex;gap:8px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.calendar-weekday,.calendar-day,.calendar-blank{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px}
+.calendar-weekday{color:var(--muted);text-align:center;font-size:.85rem}
+.calendar-day,.calendar-blank{min-height:110px}
+.calendar-day>time{color:var(--muted);font-size:.85rem}
+.calendar-event{display:block;background:var(--panel);border-left:3px solid var(--accent);padding:8px;margin-top:8px;font-size:.82rem;overflow-wrap:anywhere}
+.calendar-event span{display:block;color:var(--accent2);margin-bottom:4px}
+.calendar-agenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-top:24px}
+.calendar-agenda article{border:1px solid var(--line);padding:24px;scroll-margin-top:24px}
+.calendar-agenda h4{font:1.5rem Georgia,serif;margin:0 0 12px}
+.calendar-agenda p{color:var(--muted);line-height:1.6}
+.calendar-account{display:flex;align-items:center;flex-wrap:wrap;gap:24px;margin-top:28px}
+.calendar-account>a:last-child{text-decoration:underline;text-underline-offset:4px}
+.public-calendar button:focus-visible,.public-calendar a:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+@media(max-width:600px){.public-calendar{padding:55px 18px}.calendar-grid{display:none}.calendar-toolbar{align-items:flex-start;flex-direction:column}.calendar-toolbar .btn{min-height:44px}.calendar-account{align-items:flex-start;flex-direction:column}.public-site-header nav{gap:16px}}
+
 :root{--bg:#0d0c0a;--panel:#342d27;--panel2:#40372f;--line:#493720;--text:#f1e7d3;--muted:#b8aa95;--accent:#bd8948;--accent2:#d6a06b;--paper:#eee4d0}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:var(--bg);color:var(--text)}
@@ -60,3 +82,4 @@ button,input,select,textarea{font:inherit}
 
 @media(max-width:900px){.landing-hero{min-height:720px;background:linear-gradient(90deg,#0d0c0af8 0%,#0d0c0add 55%,#0d0c0a55 100%),url('/dance-hall-clean.webp') right center/cover no-repeat}.landing-copy{width:min(78%,680px);padding:140px 0 70px 7vw}.landing-cards{grid-template-columns:1fr}.landing-cards article{border-right:0;border-bottom:1px solid #c6b699;min-height:auto}.landing-cards article:last-child{border-bottom:0}.landing-coming{grid-template-columns:1fr;text-align:center;justify-items:center;gap:25px}.landing-coming>img{width:130px}.public-footer{grid-template-columns:1fr;text-align:center;gap:5px}.public-footer p{margin-bottom:5px}.public-footer span,.public-footer small{text-align:center}.signup-page{grid-template-columns:1fr;padding-top:120px}.signup-page>section{padding-top:0}.dashboard-grid{grid-template-columns:1fr}.dashboard-nav{display:flex;overflow:auto;border-right:0!important;border-bottom:1px solid var(--line)}table{min-width:620px}}
 @media(max-width:560px){.public-site-header{height:74px;padding:0 18px}.public-site-header>a img{height:62px}.public-site-header nav a{font-size:.72rem}.landing-hero{min-height:660px;background:linear-gradient(90deg,#0d0c0af8 0%,#0d0c0ae8 58%,#0d0c0a55 100%),url('/dance-hall-clean.webp') right center/cover no-repeat}.landing-copy{width:100%;padding:112px 22px 48px}.landing-copy h1{font-size:3.6rem;letter-spacing:-.2rem;margin-bottom:24px}.landing-intro{max-width:320px;font-size:1rem;line-height:1.55;margin-bottom:24px}.landing-actions{gap:14px}.landing-copy .landing-action{width:auto;min-width:150px}.landing-secondary{min-height:44px;font-size:.92rem}.landing-copy small{display:none}.landing-offer,.landing-coming{padding:72px 22px}.landing-offer>h2{letter-spacing:-.08rem;margin-bottom:45px}.landing-cards article{padding:30px 20px}.landing-coming .landing-action{width:100%;max-width:360px}.signup-grid{grid-template-columns:1fr}.signup-page{padding-inline:18px}.signup-page h1{letter-spacing:-.12rem}}
+@media(max-width:600px){.calendar-grid{display:grid}.calendar-day,.calendar-blank{min-height:58px;padding:5px}.calendar-weekday{padding:8px 2px;font-size:.7rem}.calendar-day>time{font-size:.75rem}.calendar-event{padding:3px;font-size:.65rem}.calendar-event span{display:none}}

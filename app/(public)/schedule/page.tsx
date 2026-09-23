@@ -1,1 +1,5 @@
-export { default, metadata } from "../classes/page";
+import { redirect } from "next/navigation";
+
+export default function SchedulePage() {
+  redirect("/#calendar");
+}
