@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   description: "Country dance instruction and dance-floor experiences coming soon to Alexandria, Louisiana.",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/icon",
-    apple: "/icon",
+    icon: "/spurs-over-stetsons-logo.webp",
+    apple: "/spurs-over-stetsons-logo.webp",
   },
   appleWebApp: {
     capable: true,
