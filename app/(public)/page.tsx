@@ -23,7 +23,7 @@ export default function HomePage() {
       <p className="landing-eyebrow">SPURS OVER STETSONS</p>
       <h2>Confidence in every step.<br/>Good times on every floor.</h2>
       <div className="landing-cards">
-        <article><span>01</span><h3>Dance Lessons</h3><p>Learn the steps, build confidence, and move at a pace that feels right for you.</p></article>
+        <article><span>01</span><h3>Personal Dance Lessons</h3><p>Learn the steps, build confidence, and move at a pace that feels right for you.</p></article>
         <article><span>02</span><h3>Group Classes</h3><p>Practice with others in a welcoming space made for learning and having fun.</p></article>
         <article><span>03</span><h3>Dance Events</h3><p>Put your skills to work, meet new people, and enjoy the dance floor.</p></article>
       </div>
