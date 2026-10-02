@@ -10,12 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#0d0c0a",
     theme_color: "#0d0c0a",
     icons: [
-      {
-        src: "/spurs-over-stetsons-logo.webp",
-        sizes: "any",
-        type: "image/webp",
-        purpose: "any",
-      },
+      { src: "/icons/spurs-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/spurs-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
     ],
   };
 }
