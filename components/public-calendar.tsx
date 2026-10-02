@@ -141,7 +141,7 @@ function CalendarContent() {
           {dayEvents.slice(0,2).map(event => <button key={event.id} className="calendar-class-button"
             title={`${event.title} · ${studioTime(event.start)}${event.extendedProps?.instructorName ? " · " + event.extendedProps.instructorName : ""}`}
             aria-label={`View ${event.title}, ${studioTime(event.start)}`} onClick={() => { setSelected(key); setActiveEvent(event); }}>
-            <span>{event.title}</span>
+            <span>{event.title.replace(/\s*-\s*(Group Class|Social Dance)\b.*$/i, "").replace(/\s*\([^)]*\)\s*$/, "")}</span>
           </button>)}
           {count > 2 && <button className="calendar-more-events" onClick={() => jump(key)}>+{count-2} more</button>}
         </div>;
