@@ -165,7 +165,7 @@ function CalendarContent() {
                 <h4 title={event.title}>{event.title}</h4>
                 <p className="glance-detail">{props?.classType === "SocialDance" ? "Social dance" : "Group class"}{props?.instructorName ? ` · ${props.instructorName}` : ""}</p>
                 <div className="glance-bottom"><span>{props?.price != null ? new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:2}).format(props.price) : "See booking details"}{full ? " · Full" : ""}</span>
-                <a href={full ? "https://my.e-ballroom.com/login" : signup} aria-label={`${full ? "View availability" : "Sign up"} for ${event.title} on ${date}`}>{full ? "View Availability" : "Sign Up Now"} ↗</a></div>
+                <a href="https://my.e-ballroom.com/login" aria-label={`${full ? "View availability" : "Book"} for ${event.title} on ${date}`}>{full ? "View Availability" : "Book This Class"} ↗</a></div>
               </div>
             </article>;
           }) : <div className="glance-empty" data-date={m+"-01"}><strong>{monthLabel(m)}</strong><p>No classes or dances posted yet.</p></div>
@@ -184,10 +184,10 @@ function CalendarContent() {
         {activeEvent.extendedProps?.instructorName && <p>Instructor: {activeEvent.extendedProps.instructorName}</p>}
         {activeEvent.extendedProps?.price != null && <p>{new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(activeEvent.extendedProps.price)}</p>}
         {activeEvent.extendedProps?.spotsAvailable != null && <p>{activeEvent.extendedProps.spotsAvailable > 0 ? activeEvent.extendedProps.spotsAvailable + " spots available" : "Currently full"}</p>}
-        <a className="landing-action" href={activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "https://my.e-ballroom.com/login" : signup}>{activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "View Availability" : "Sign Up Now"} ↗</a>
+        <p>Use your existing account, then select this class in eBallroom to confirm your booking.</p><a className="landing-action" href="https://my.e-ballroom.com/login">{activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "View Availability" : "Book This Class"} ↗</a>
       </div>}
     </dialog>
-    <p className="glance-note">Registration and current availability are confirmed in eBallroom.</p>
-    <div className="calendar-account"><a href="https://my.e-ballroom.com/login">Already have a student account? Log in ↗</a></div>
+    <p className="glance-note">Book with your existing eBallroom account. After signing in, select the class to confirm your booking.</p>
+    <div className="calendar-account"><a href={signup}>New student? Create an account ↗</a><a href="https://my.e-ballroom.com/login">Already a student? Log in ↗</a></div>
   </section>;
 }
