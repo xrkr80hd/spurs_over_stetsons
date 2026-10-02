@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 type DanceEvent = {
   id: string;
@@ -29,72 +29,141 @@ export function PublicCalendar() {
   return mounted ? <CalendarContent /> : <section id="calendar" className="public-calendar"><h2>Classes &amp; dances</h2><p>Loading calendar…</p></section>;
 }
 
-function CalendarContent() {
-  const [month, setMonth] = useState(() => studioDate(new Date().toISOString()).slice(0, 7));
-  const [result, setResult] = useState<{ month: string; events: DanceEvent[]; error?: string } | null>(null);
-  const [retry, setRetry] = useState(0);
-  useEffect(() => {
-    if (!month) return;
-    const controller = new AbortController();
-    fetch(`/api/calendar?month=${month}`, { signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Calendar unavailable");
-        const events: DanceEvent[] = await response.json();
-        if (!controller.signal.aborted) setResult({ month, events });
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setResult({ month, events: [], error: "We couldn’t load the calendar. Please try again." });
-      });
-    return () => controller.abort();
-  }, [month, retry]);
 
-  const loading = !month || result?.month !== month;
-  const events = loading ? [] : result.events.filter((event) => studioDate(event.start).startsWith(month)).sort((a, b) => a.start.localeCompare(b.start));
+function shiftMonth(month: string, amount: number) {
+  const [y, m] = month.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1 + amount, 1)).toISOString().slice(0, 7);
+}
+function monthLabel(month: string) {
+  return new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(month + "-01T12:00:00Z"));
+}
+function CalendarContent() {
+  const today = studioDate(new Date().toISOString());
+  const [month, setMonth] = useState(today.slice(0, 7));
+  const [heading, setHeading] = useState(month);
+  const [range, setRange] = useState({ first: shiftMonth(month, -1), last: shiftMonth(month, 3) });
+  const [cache, setCache] = useState<Record<string, DanceEvent[]>>({});
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [retry, setRetry] = useState(0);
+  const list = useRef<HTMLDivElement>(null);
+  const pending = useRef<string | null>(month + "-01");
+  const previousHeight = useRef<number | null>(null);
+  const [selected, setSelected] = useState("");
+  const months: string[] = [];
+  for (let m = range.first; m <= range.last; m = shiftMonth(m, 1)) months.push(m);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const wanted: string[] = [];
+    for (let m = range.first; m <= range.last; m = shiftMonth(m, 1)) wanted.push(m);
+    for (const m of wanted) {
+      fetch(`/api/calendar?month=${m}`, { signal: controller.signal })
+        .then(async response => {
+          if (!response.ok) throw new Error("Unavailable");
+          const data: DanceEvent[] = await response.json();
+          if (!controller.signal.aborted) {
+            setCache(old => ({ ...old, [m]: data.filter(e => studioDate(e.start).startsWith(m)).sort((a,b) => a.start.localeCompare(b.start)) }));
+            setErrors(old => ({ ...old, [m]: false }));
+          }
+        }).catch(() => { if (!controller.signal.aborted) setErrors(old => ({ ...old, [m]: true })); });
+    }
+    return () => controller.abort();
+  }, [range.first, range.last, retry]);
+
+  useEffect(() => {
+    const el = list.current;
+    if (!el) return;
+    if (previousHeight.current !== null) {
+      el.scrollTop += el.scrollHeight - previousHeight.current;
+      previousHeight.current = null;
+    }
+    if (pending.current) {
+      const key = pending.current;
+      const target = Array.from(el.querySelectorAll<HTMLElement>("[data-date]")).find(node => (node.dataset.date ?? "") >= key);
+      if (target && cache[key.slice(0,7)]) {
+        el.scrollTop += target.getBoundingClientRect().top - el.getBoundingClientRect().top;
+        pending.current = null;
+      }
+    }
+  }, [cache, range]);
+
+  function jump(key: string) {
+    setSelected(key);
+    setMonth(key.slice(0,7));
+    setHeading(key.slice(0,7));
+    pending.current = key;
+    setRange(old => ({ first: old.first < key.slice(0,7) ? old.first : shiftMonth(key.slice(0,7), -1), last: old.last > key.slice(0,7) ? old.last : shiftMonth(key.slice(0,7), 3) }));
+    const el = list.current;
+    const target = el && Array.from(el.querySelectorAll<HTMLElement>("[data-date]")).find(node => (node.dataset.date ?? "") >= key);
+    if (el && target) {
+      el.scrollTo({ top: el.scrollTop + target.getBoundingClientRect().top - el.getBoundingClientRect().top, behavior: "instant" });
+      pending.current = null;
+    }
+  }
+  function trackMonth() {
+    const el = list.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top;
+    const first = Array.from(el.querySelectorAll<HTMLElement>("[data-month]")).find(node => node.getBoundingClientRect().bottom > top + 4);
+    if (first?.dataset.month) setHeading(first.dataset.month);
+  }
+  const events = cache[month] ?? [];
   const [year, number] = month.split("-").map(Number);
-  const date = month ? new Date(Date.UTC(year, number - 1, 1)) : null;
-  const label = date ? new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" }).format(date) : "Calendar";
-  const days = date ? new Date(Date.UTC(year, number, 0)).getUTCDate() : 0;
-  const byDay = new Map<string, DanceEvent[]>();
-  for (const event of events) {
-    const key = studioDate(event.start);
-    byDay.set(key, [...(byDay.get(key) ?? []), event]);
-  }
-  function move(amount: number) {
-    setResult(null);
-    setMonth(new Date(Date.UTC(year, number - 1 + amount, 1)).toISOString().slice(0, 7));
-  }
+  const offset = new Date(Date.UTC(year, number - 1, 1)).getUTCDay();
+  const days = new Date(Date.UTC(year, number, 0)).getUTCDate();
+  const cells = Math.ceil((offset + days) / 7) * 7;
   return <section id="calendar" className="public-calendar" aria-labelledby="calendar-title">
     <p className="landing-eyebrow">MEET US ON THE DANCE FLOOR</p>
     <h2 id="calendar-title">Classes &amp; dances</h2>
-    <p>Explore group classes and social dances. All times are Alexandria, Louisiana time (Central).</p>
+    <p>Pick a date to explore the classes below. All times are Central.</p>
     <div className="calendar-toolbar">
-      <h3>{label}</h3>
-      <div>
-        <button className="btn" disabled={!month} onClick={() => move(-1)} aria-label="Previous month">←</button>
-        <button className="btn" onClick={() => { setResult(null); setMonth(studioDate(new Date().toISOString()).slice(0, 7)); setRetry((value) => value + 1); }}>This month</button>
-        <button className="btn" disabled={!month} onClick={() => move(1)} aria-label="Next month">→</button>
+      <h3>{monthLabel(month)}</h3>
+      <div><button className="btn" onClick={() => jump(shiftMonth(month,-1) + "-01")} aria-label="Previous month">←</button>
+      <button className="btn" onClick={() => jump(today)}>Today</button>
+      <button className="btn" onClick={() => jump(shiftMonth(month,1) + "-01")} aria-label="Next month">→</button></div>
+    </div>
+    <div className="calendar-grid calendar-compact" aria-label={monthLabel(month)}>
+      {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(day => <div className="calendar-weekday" key={day}>{day}</div>)}
+      {Array.from({ length: cells }, (_, i) => {
+        const day = i - offset + 1;
+        if (day < 1 || day > days) return <div className="calendar-blank" key={i} />;
+        const key = `${month}-${String(day).padStart(2,"0")}`;
+        const count = events.filter(e => studioDate(e.start) === key).length;
+        return <button className={`calendar-day ${count ? "has-events" : ""} ${selected === key ? "is-selected" : ""}`} key={i}
+          aria-label={`${monthLabel(month)} ${day}, ${cache[month] ? count + " scheduled events" : "schedule loading"}`}
+          aria-pressed={selected === key} aria-current={key === today ? "date" : undefined} onClick={() => jump(key)}>
+          <time dateTime={key}>{day}</time>{count > 0 && <span className="calendar-count"><b>{count}</b><span> {count === 1 ? "class / event" : "classes / events"}</span></span>}
+        </button>;
+      })}
+    </div>
+    {errors[month] && <p role="status">Calendar unavailable. <button className="btn" onClick={() => setRetry(n => n+1)}>Try again</button></p>}
+    <div className="glance-title"><h3>Classes at a Glance</h3><span>Scroll to explore ↕</span></div>
+    <div className="glance-panel">
+      <div className="glance-month" aria-live="polite">{monthLabel(heading)}</div>
+      <div ref={list} className="glance-scroll" role="region" aria-label="Classes at a Glance — scroll for more dates" tabIndex={0} onScroll={trackMonth}>
+        <button className="glance-more" onClick={() => { previousHeight.current = list.current?.scrollHeight ?? null; setRange(r => ({ ...r, first: shiftMonth(r.first,-3) })); }}>↑ Earlier months</button>
+        {months.map(m => <div key={m} data-month={m}>
+          {cache[m] ? cache[m].length ? cache[m].map(event => {
+            const date = studioDate(event.start);
+            const props = event.extendedProps;
+            const full = props?.spotsAvailable != null && props.spotsAvailable <= 0;
+            return <article className={`glance-card ${selected === date ? "is-highlighted" : ""}`} key={event.id} data-date={date}>
+              <div className="glance-date"><span>{new Intl.DateTimeFormat("en-US",{month:"short",timeZone:"UTC"}).format(new Date(date+"T12:00:00Z"))}</span><strong>{Number(date.slice(8))}</strong></div>
+              <div className="glance-info">
+                <p className="glance-time">{studioTime(event.start)}{event.end ? ` – ${studioTime(event.end)}` : ""}</p>
+                <h4 title={event.title}>{event.title}</h4>
+                <p className="glance-detail">{props?.classType === "SocialDance" ? "Social dance" : "Group class"}{props?.instructorName ? ` · ${props.instructorName}` : ""}</p>
+                <div className="glance-bottom"><span>{props?.price != null ? new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:2}).format(props.price) : "See booking details"}{full ? " · Full" : ""}</span>
+                <a href={full ? "https://my.e-ballroom.com/login" : signup} aria-label={`${full ? "View availability" : "Sign up"} for ${event.title} on ${date}`}>{full ? "View Availability" : "Sign Up Now"} ↗</a></div>
+              </div>
+            </article>;
+          }) : <div className="glance-empty" data-date={m+"-01"}><strong>{monthLabel(m)}</strong><p>No classes or dances posted yet.</p></div>
+          : <div className="glance-empty" data-date={m+"-01"}><strong>{monthLabel(m)}</strong><p>{errors[m] ? "Schedule temporarily unavailable." : "Loading classes…"}</p>{errors[m] && <button className="btn" onClick={() => setRetry(n=>n+1)}>Try again</button>}</div>}
+        </div>)}
+        <button className="glance-more" onClick={() => setRange(r => ({ ...r, last: shiftMonth(r.last,3) }))}>Later months ↓</button>
       </div>
     </div>
-    <div aria-live="polite" aria-busy={loading}>
-      {loading ? <p className="empty">Loading calendar…</p> : result.error ? <div className="empty"><p>{result.error}</p><button className="btn" onClick={() => { setResult(null); setRetry((value) => value + 1); }}>Try again</button></div> : <>
-        <div className="calendar-grid" aria-label={label}>
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <div className="calendar-weekday" key={day}>{day}</div>)}
-          {Array.from({ length: date?.getUTCDay() ?? 0 }, (_, index) => <div className="calendar-blank" key={`blank-${index}`} />)}
-          {Array.from({ length: days }, (_, index) => {
-            const key = `${month}-${String(index + 1).padStart(2, "0")}`;
-            return <div className="calendar-day" key={key}><time dateTime={key}>{index + 1}</time>{(byDay.get(key) ?? []).map((event) => <a key={event.id} href={`#dance-${event.id}`} className="calendar-event"><span>{studioTime(event.start)}</span>{event.title}</a>)}</div>;
-          })}
-        </div>
-        {events.length === 0 ? <p className="empty">No classes or dances are posted for {label} yet. Check back soon.</p> : <div className="calendar-agenda">
-          {events.map((event) => <article id={`dance-${event.id}`} key={event.id}>
-            <p className="landing-eyebrow">{studioDate(event.start)} · {studioTime(event.start)}{event.end ? ` – ${studioTime(event.end)}` : ""}</p>
-            <h4>{event.title}</h4>
-            <p>{event.extendedProps?.classType === "SocialDance" ? "Social dance" : "Group class"}{event.extendedProps?.instructorName ? ` · ${event.extendedProps.instructorName}` : ""}</p>
-            <p>{event.extendedProps?.price != null ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(event.extendedProps.price) : ""}{event.extendedProps?.spotsAvailable != null ? ` · ${event.extendedProps.spotsAvailable > 0 ? `${event.extendedProps.spotsAvailable} spots available` : "Full"}` : ""}</p>
-          </article>)}
-        </div>}
-      </>}
-    </div>
-    <div className="calendar-account"><a className="landing-action" href={signup}>Sign Up <span aria-hidden="true">→</span></a><a href="https://my.e-ballroom.com/login">Already have a student account? Log in ↗</a></div>
+    <p className="glance-note">Registration and current availability are confirmed in eBallroom.</p>
+    <div className="calendar-account"><a href="https://my.e-ballroom.com/login">Already have a student account? Log in ↗</a></div>
   </section>;
 }
