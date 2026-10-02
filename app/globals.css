@@ -141,3 +141,28 @@ button,input,select,textarea{font:inherit}
 .glance-title>span{font-size:.65rem}
 .glance-month{padding:14px}
 }
+
+.public-calendar .calendar-compact .calendar-day{justify-content:flex-start;gap:3px;padding:5px;overflow:hidden}
+.calendar-date-button{background:transparent;border:0;color:inherit;min-height:26px;width:100%;cursor:pointer;font-size:1rem}
+.calendar-date-button[aria-current=date]{text-decoration:underline;text-underline-offset:4px;font-weight:bold}
+.calendar-class-button{display:block;border:0;border-left:2px solid #d6a06b;background:#bd894825;color:var(--text);text-align:left;width:100%;padding:3px 4px;font-size:.68rem;line-height:1.2;cursor:pointer;min-width:0}
+.calendar-class-button span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.calendar-class-button:hover{background:#805c33}
+.calendar-more-events{border:0;background:transparent;color:#e9c291;font-size:.65rem;cursor:pointer;padding:1px}
+.class-modal{position:fixed;inset:0;margin:auto;width:min(520px,calc(100% - 32px));max-height:85dvh;padding:0;background:#20170f;color:var(--text);border:1px solid #bd8948;border-radius:14px;box-shadow:0 25px 100px #0009}
+.class-modal::backdrop{background:#000b;backdrop-filter:blur(4px)}
+.class-modal-content{padding:32px}
+.class-modal h3{font:1.7rem/1.2 Georgia,serif;margin:0 0 22px;padding-right:20px}
+.class-modal p{color:#d4c3aa;font-size:.95rem;line-height:1.5}
+.class-modal .landing-eyebrow{color:#d6a06b;font-size:.72rem}
+.class-modal-close{position:absolute;right:10px;top:10px;width:44px;height:44px;border:0;background:transparent;color:var(--text);font-size:1.8rem;cursor:pointer}
+.class-modal .landing-action{margin-top:16px}
+@media(max-width:600px){
+.public-calendar .calendar-compact .calendar-day{padding:2px;gap:1px}
+.calendar-date-button{min-height:22px;font-size:.8rem}
+.calendar-class-button{padding:2px;font-size:.55rem}
+.calendar-class-button span{-webkit-line-clamp:1}
+.calendar-more-events{font-size:.5rem}
+.public-calendar .calendar-compact .calendar-day,.public-calendar .calendar-compact .calendar-blank{aspect-ratio:auto;min-height:78px}
+.class-modal-content{padding:24px}
+}

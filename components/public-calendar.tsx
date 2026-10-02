@@ -26,7 +26,7 @@ function studioTime(value: string) {
 const subscribe = () => () => {};
 export function PublicCalendar() {
   const mounted = useSyncExternalStore(subscribe, () => true, () => false);
-  return mounted ? <CalendarContent /> : <section id="calendar" className="public-calendar"><h2>Classes &amp; dances</h2><p>Loading calendar…</p></section>;
+  return mounted ? <CalendarContent /> : <section id="calendar" className="public-calendar"><h2>Events &amp; Schedule</h2><p>Loading calendar…</p></section>;
 }
 
 
@@ -49,6 +49,12 @@ function CalendarContent() {
   const pending = useRef<string | null>(month + "-01");
   const previousHeight = useRef<number | null>(null);
   const [selected, setSelected] = useState("");
+  const [activeEvent, setActiveEvent] = useState<DanceEvent | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (activeEvent) dialog.current?.showModal();
+    else dialog.current?.close();
+  }, [activeEvent]);
   const months: string[] = [];
   for (let m = range.first; m <= range.last; m = shiftMonth(m, 1)) months.push(m);
 
@@ -114,8 +120,8 @@ function CalendarContent() {
   const cells = Math.ceil((offset + days) / 7) * 7;
   return <section id="calendar" className="public-calendar" aria-labelledby="calendar-title">
     <p className="landing-eyebrow">MEET US ON THE DANCE FLOOR</p>
-    <h2 id="calendar-title">Classes &amp; dances</h2>
-    <p>Pick a date to explore the classes below. All times are Central.</p>
+    <h2 id="calendar-title">Events &amp; Schedule</h2>
+    <p>Click on a calendar item for details. All times are Central.</p>
     <div className="calendar-toolbar">
       <h3>{monthLabel(month)}</h3>
       <div><button className="btn" onClick={() => jump(shiftMonth(month,-1) + "-01")} aria-label="Previous month">←</button>
@@ -129,11 +135,16 @@ function CalendarContent() {
         if (day < 1 || day > days) return <div className="calendar-blank" key={i} />;
         const key = `${month}-${String(day).padStart(2,"0")}`;
         const count = events.filter(e => studioDate(e.start) === key).length;
-        return <button className={`calendar-day ${count ? "has-events" : ""} ${selected === key ? "is-selected" : ""}`} key={i}
-          aria-label={`${monthLabel(month)} ${day}, ${cache[month] ? count + " scheduled events" : "schedule loading"}`}
-          aria-pressed={selected === key} aria-current={key === today ? "date" : undefined} onClick={() => jump(key)}>
-          <time dateTime={key}>{day}</time>{count > 0 && <span className="calendar-count"><b>{count}</b><span> {count === 1 ? "class / event" : "classes / events"}</span></span>}
-        </button>;
+        const dayEvents = events.filter(e => studioDate(e.start) === key);
+        return <div className={`calendar-day ${count ? "has-events" : ""} ${selected === key ? "is-selected" : ""}`} key={i}>
+          <button className="calendar-date-button" aria-label={`${monthLabel(month)} ${day}, ${count} scheduled events`} aria-pressed={selected === key} aria-current={key === today ? "date" : undefined} onClick={() => jump(key)}><time dateTime={key}>{day}</time></button>
+          {dayEvents.slice(0,2).map(event => <button key={event.id} className="calendar-class-button"
+            title={`${event.title} · ${studioTime(event.start)}${event.extendedProps?.instructorName ? " · " + event.extendedProps.instructorName : ""}`}
+            aria-label={`View ${event.title}, ${studioTime(event.start)}`} onClick={() => { setSelected(key); setActiveEvent(event); }}>
+            <span>{event.title}</span>
+          </button>)}
+          {count > 2 && <button className="calendar-more-events" onClick={() => jump(key)}>+{count-2} more</button>}
+        </div>;
       })}
     </div>
     {errors[month] && <p role="status">Calendar unavailable. <button className="btn" onClick={() => setRetry(n => n+1)}>Try again</button></p>}
@@ -163,6 +174,19 @@ function CalendarContent() {
         <button className="glance-more" onClick={() => setRange(r => ({ ...r, last: shiftMonth(r.last,3) }))}>Later months ↓</button>
       </div>
     </div>
+    <dialog ref={dialog} className="class-modal" onCancel={() => setActiveEvent(null)} onClose={() => setActiveEvent(null)} onClick={event => { if (event.target === event.currentTarget) setActiveEvent(null); }} aria-labelledby="class-modal-title">
+      {activeEvent && <div className="class-modal-content">
+        <button className="class-modal-close" aria-label="Close class details" onClick={() => setActiveEvent(null)}>×</button>
+        <p className="landing-eyebrow">{activeEvent.extendedProps?.classType === "SocialDance" ? "SOCIAL DANCE" : "GROUP CLASS"}</p>
+        <h3 id="class-modal-title">{activeEvent.title}</h3>
+        <p>{new Intl.DateTimeFormat("en-US", { weekday:"long", month:"long", day:"numeric", year:"numeric", timeZone:"UTC" }).format(new Date(studioDate(activeEvent.start)+"T12:00:00Z"))}</p>
+        <p>{studioTime(activeEvent.start)}{activeEvent.end ? " – " + studioTime(activeEvent.end) : ""} · Central</p>
+        {activeEvent.extendedProps?.instructorName && <p>Instructor: {activeEvent.extendedProps.instructorName}</p>}
+        {activeEvent.extendedProps?.price != null && <p>{new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(activeEvent.extendedProps.price)}</p>}
+        {activeEvent.extendedProps?.spotsAvailable != null && <p>{activeEvent.extendedProps.spotsAvailable > 0 ? activeEvent.extendedProps.spotsAvailable + " spots available" : "Currently full"}</p>}
+        <a className="landing-action" href={activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "https://my.e-ballroom.com/login" : signup}>{activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "View Availability" : "Sign Up Now"} ↗</a>
+      </div>}
+    </dialog>
     <p className="glance-note">Registration and current availability are confirmed in eBallroom.</p>
     <div className="calendar-account"><a href="https://my.e-ballroom.com/login">Already have a student account? Log in ↗</a></div>
   </section>;
