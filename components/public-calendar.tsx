@@ -9,6 +9,9 @@ type DanceEvent = {
   end?: string | null;
   extendedProps?: { classType?: string; instructorName?: string | null; price?: number | null; spotsAvailable?: number | null };
 };
+function bookingUrl(event: DanceEvent) {
+  return "/book?" + new URLSearchParams({ title: event.title, date: studioDate(event.start), time: studioTime(event.start) + (event.end ? " – " + studioTime(event.end) : "") }).toString();
+}
 const timeZone = "America/Chicago";
 const signup = "https://my.e-ballroom.com/register?studio=4b9f0d88-9edc-4390-8998-93937355999e";
 
@@ -165,7 +168,7 @@ function CalendarContent() {
                 <h4 title={event.title}>{event.title}</h4>
                 <p className="glance-detail">{props?.classType === "SocialDance" ? "Social dance" : "Group class"}{props?.instructorName ? ` · ${props.instructorName}` : ""}</p>
                 <div className="glance-bottom"><span>{props?.price != null ? new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:2}).format(props.price) : "See booking details"}{full ? " · Full" : ""}</span>
-                <a href="https://my.e-ballroom.com/login" aria-label={`${full ? "View availability" : "Book"} for ${event.title} on ${date}`}>{full ? "View Availability" : "Book This Class"} ↗</a></div>
+                <a href={bookingUrl(event)} aria-label={`${full ? "View availability" : "Book"} for ${event.title} on ${date}`}>{full ? "View Availability" : "Book This Class"} ↗</a></div>
               </div>
             </article>;
           }) : <div className="glance-empty" data-date={m+"-01"}><strong>{monthLabel(m)}</strong><p>No classes or dances posted yet.</p></div>
@@ -184,10 +187,10 @@ function CalendarContent() {
         {activeEvent.extendedProps?.instructorName && <p>Instructor: {activeEvent.extendedProps.instructorName}</p>}
         {activeEvent.extendedProps?.price != null && <p>{new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(activeEvent.extendedProps.price)}</p>}
         {activeEvent.extendedProps?.spotsAvailable != null && <p>{activeEvent.extendedProps.spotsAvailable > 0 ? activeEvent.extendedProps.spotsAvailable + " spots available" : "Currently full"}</p>}
-        <p>Use your existing account, then select this class in eBallroom to confirm your booking.</p><a className="landing-action" href="https://my.e-ballroom.com/login">{activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "View Availability" : "Book This Class"} ↗</a>
+        <p>Choose member login or create an account to continue.</p><a className="landing-action" href={bookingUrl(activeEvent)}>{activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "View Availability" : "Book This Class"} ↗</a>
       </div>}
     </dialog>
-    <p className="glance-note">Book with your existing eBallroom account. After signing in, select the class to confirm your booking.</p>
+    <p className="glance-note">Choose a class, then log in as a member or create an account.</p>
     <div className="calendar-account"><a href={signup}>New student? Create an account ↗</a><a href="https://my.e-ballroom.com/login">Already a student? Log in ↗</a></div>
   </section>;
 }
