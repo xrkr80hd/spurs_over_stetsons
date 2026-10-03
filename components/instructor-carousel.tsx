@@ -6,13 +6,13 @@ type Instructor = typeof instructors[number];
 
 function Portrait({ person }: { person: Instructor }) {
   const [x,y,w,h] = person.crop ?? [0,0,person.width,person.height];
-  const scale = Math.min(400/w,300/h);
-  const picture = <svg x={(400-w*scale)/2} y={(300-h*scale)/2} width={w*scale} height={h*scale} viewBox={[x,y,w,h].join(" ")} overflow="hidden">
+  const scale = Math.min(300/w,400/h);
+  const picture = <svg x={(300-w*scale)/2} y={(400-h*scale)/2} width={w*scale} height={h*scale} viewBox={[x,y,w,h].join(" ")} overflow="hidden">
     <image href={person.photo} width={person.width} height={person.height}/>
   </svg>;
   return <span className={styles.portrait}>
-    <svg className={styles.blur} viewBox="0 0 400 300" aria-hidden="true">{picture}</svg>
-    <svg className={styles.photo} viewBox="0 0 400 300" role="img" aria-label={person.name}>{picture}</svg>
+    <svg className={styles.blur} viewBox="0 0 300 400" aria-hidden="true">{picture}</svg>
+    <svg className={styles.photo} viewBox="0 0 300 400" role="img" aria-label={person.name}>{picture}</svg>
   </span>;
 }
 export function InstructorCarousel() {
@@ -22,6 +22,8 @@ export function InstructorCarousel() {
   const [focused,setFocused] = useState(false);
   const [reduced,setReduced] = useState(false);
   const [active,setActive] = useState<Instructor|null>(null);
+  const touch = useRef<{x:number;y:number}|null>(null);
+  const suppressClick = useRef(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const index = ((step % instructors.length) + instructors.length) % instructors.length;
   const stopped = paused || hover || focused || reduced || !!active;
@@ -48,20 +50,26 @@ export function InstructorCarousel() {
     onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}
     onFocusCapture={()=>setFocused(true)} onBlurCapture={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setFocused(false);}}>
     <div className={styles.heading}><p className="landing-eyebrow">THE PEOPLE BEHIND THE STEPS</p><h2 id="instructors-title">Meet Our Dance Instructors</h2><p>Get to know the people who make every lesson your own.</p></div>
-    <div className={styles.stage} aria-live={stopped?"polite":"off"}>
+    <div className={styles.stage} aria-live={stopped?"polite":"off"}
+      onTouchStart={e=>{if(e.touches.length!==1){touch.current=null;return;}touch.current={x:e.touches[0].clientX,y:e.touches[0].clientY};suppressClick.current=false;}}
+      onTouchCancel={()=>{touch.current=null;}}
+      onTouchEnd={e=>{const start=touch.current;touch.current=null;if(!start)return;const dx=e.changedTouches[0].clientX-start.x;const dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.5){suppressClick.current=true;setStep(s=>s+(dx<0?1:-1));}}}
+      onClickCapture={e=>{if(suppressClick.current){e.preventDefault();e.stopPropagation();suppressClick.current=false;}}}>
+      <button className={styles.edge+" "+styles.left} aria-label="Previous instructor" onClick={()=>setStep(s=>s-1)}>‹</button>
+      <button className={styles.edge+" "+styles.right} aria-label="Next instructor" onClick={()=>setStep(s=>s+1)}>›</button>
       {instructors.map((person,i)=><article key={person.name} className={styles.slide+" "+(step%2!==0?styles.reverse:"")} aria-hidden={i!==index} inert={i!==index} style={{visibility:i===index?"visible":"hidden"}} aria-roledescription="slide" aria-label={`${i+1} of ${instructors.length}`}>
-        <button className={styles.photoButton} onClick={()=>setActive(person)} aria-label={"View "+person.name+" profile"}><Portrait person={person}/><span className={styles.photoHint}>View instructor ↗</span></button>
-        <div className={styles.bio}><p className={styles.label}>DANCE INSTRUCTOR</p><h3><button onClick={()=>setActive(person)}>{person.name}</button></h3><p>{person.bio}</p><button className={styles.details} onClick={()=>setActive(person)}>Meet {person.name.split(" ")[0]} <span aria-hidden="true">↗</span></button></div>
+        <button className={styles.photoButton} onClick={()=>setActive(person)} aria-label={"View "+person.name+" photo"}><Portrait person={person}/></button>
+        <div className={styles.bio}><p className={styles.label}>DANCE INSTRUCTOR</p><h3>{person.name}</h3><div className={styles.bioText} tabIndex={0} role="region" aria-label={person.name+" biography"}><p>{person.bio}</p></div></div>
       </article>)}
     </div>
     <div className={styles.controls}>
-      <button aria-label="Previous instructor" onClick={()=>setStep(s=>s-1)}>←</button>
-      <span>{index+1} / {instructors.length}</span>
-      <button aria-label="Next instructor" onClick={()=>setStep(s=>s+1)}>→</button>
-      {!reduced && <button aria-pressed={paused} onClick={()=>setPaused(p=>!p)}>{paused?"Play":"Pause"}</button>}
+      <div className={styles.dots} aria-label="Choose instructor">
+      {instructors.map((person,i)=><button key={person.name} className={styles.dot} aria-label={"Show "+person.name} aria-current={i===index?"true":undefined} onClick={()=>setStep(s=>s+(i-index))}><span/></button>)}
+      </div>
+      {!reduced && <button className={styles.pause} aria-label={paused?"Play instructor carousel":"Pause instructor carousel"} aria-pressed={paused} onClick={()=>setPaused(p=>!p)}>{paused?"▷":"Ⅱ"}</button>}
     </div>
     <dialog ref={dialog} className={styles.modal} onCancel={()=>setActive(null)} onClose={()=>setActive(null)} onClick={e=>{if(e.target===e.currentTarget)setActive(null);}} aria-labelledby="instructor-modal-name">
-      {active && <div className={styles.modalInner}><button className={styles.close} aria-label="Close instructor profile" onClick={()=>setActive(null)}>×</button><Portrait person={active}/><div><p className={styles.label}>MEET YOUR INSTRUCTOR</p><h2 id="instructor-modal-name">{active.name}</h2><p>{active.bio}</p></div></div>}
+      {active && <div className={styles.modalInner}><button className={styles.close} aria-label="Close instructor profile" onClick={()=>setActive(null)}>×</button><Portrait person={active}/><h2 id="instructor-modal-name" className={styles.photoCaption}>{active.name}</h2></div>}
     </dialog>
   </section>;
 }
