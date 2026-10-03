@@ -11,6 +11,7 @@ export function PublicHeader() {
       </Link>
       <nav aria-label="Main navigation">
         <Link href="/#calendar">Calendar</Link>
+        <Link href="/contact">Contact Us</Link>
         <a href={LOGIN_URL} target="_blank" rel="noreferrer">Login</a>
       </nav>
     </header>
