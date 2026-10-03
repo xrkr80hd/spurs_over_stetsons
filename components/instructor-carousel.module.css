@@ -20,3 +20,37 @@
 .modalInner>.portrait{height:420px}.modalInner h2{font-size:2rem;line-height:1.15;margin:12px 0 20px}.modalInner p{line-height:1.8}
 .close{position:absolute;top:6px;right:10px;width:44px;height:44px;background:none;color:inherit;border:0;font-size:2rem;cursor:pointer}
 @media(max-width:700px){.section{padding:38px 12px}.heading{margin-bottom:22px}.heading h2{font-size:1.8rem}.slide{grid-template-columns:42% 58%}.reverse{grid-template-columns:58% 42%}.photoButton{align-self:center;aspect-ratio:4/3;height:auto}.bio{padding:16px 12px}.bio h3{font-size:1.25rem;margin:8px 0 12px}.bio>p:not(.label){font-size:.875rem;line-height:1.55;margin-bottom:12px}.label{font-size:.6rem;letter-spacing:.08em}.photoHint{font-size:.6rem;bottom:4px;right:4px;padding:5px}.details{font-size:.8rem}.modalInner{grid-template-columns:1fr;padding:52px 22px 24px;gap:16px}.modalInner>.portrait{height:280px}}
+
+.stage{position:relative;touch-action:pan-y pinch-zoom}
+.bioText{min-height:0}.bioText p{font-size:1rem;line-height:1.75;margin:0 0 22px}
+.edge{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:44px;height:64px;border:1px solid #b88d5270;background:#17120ee8;color:#e6dfd0;font-size:2rem;cursor:pointer;opacity:0;transition:opacity .18s}
+.left{left:0}.right{right:0}.edge:hover,.edge:focus-visible{opacity:1}
+.controls{gap:8px;margin-top:12px}.dots{display:flex;align-items:center;justify-content:center}
+.controls .dot{border:0;padding:0;width:36px;min-width:36px;height:44px;background:transparent;display:grid;place-items:center}
+.dot span{width:8px;height:8px;border-radius:50%;background:#b88d5255;border:1px solid #b88d52}
+.dot[aria-current="true"] span{background:#d6ac71;box-shadow:0 0 0 3px #b88d5222}
+.controls .pause{border:0;padding:0;width:36px;min-width:36px;color:#b88d52}
+@media(hover:none){.edge{display:none}}
+@media(max-width:700px){
+ .slide,.reverse{height:320px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .photoButton{align-self:stretch;height:100%;aspect-ratio:auto}
+ .photo,.blur{height:100%;width:100%}.blur{transform:scale(2.5)}
+ .bio,.reverse .bio{padding:18px 12px;justify-content:flex-start;overflow:hidden}
+ .bio h3{font-size:1.18rem;margin:7px 0 12px}
+ .bioText{flex:1;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#b88d52 #201912}
+ .bioText p{font-size:.875rem;line-height:1.55;margin:0;padding-right:5px}
+ .details{flex-shrink:0;margin-top:8px;min-height:36px}
+ .photoHint{display:none}
+}
+
+/* Equal 3:4 panels at every viewport width. */
+.stage{max-width:840px;aspect-ratio:3/2;container-type:inline-size}
+.slide,.reverse{grid-template-columns:repeat(2,minmax(0,1fr));height:100%;min-height:0;overflow:hidden}
+.photoButton{align-self:stretch;width:100%;height:100%;aspect-ratio:3/4;min-height:0}
+.bio,.reverse .bio{box-sizing:border-box;height:100%;min-height:0;overflow:hidden;padding:clamp(10px,3cqw,28px);justify-content:flex-start}
+.bio h3{font-size:clamp(1rem,4cqw,2rem);margin:6px 0 12px}
+.bioText{flex:1;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#b88d52 #201912}
+.bioText p{font-size:clamp(.8rem,2cqw,1rem);line-height:1.55;margin:0}
+.bio .label{margin:0;font-size:clamp(.55rem,1.4cqw,.7rem)}
+.details{flex-shrink:0;margin-top:8px;font-size:clamp(.7rem,1.8cqw,.9rem);min-height:32px}
+.photoHint{display:none}
