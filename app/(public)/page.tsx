@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { InstructorCarousel } from "@/components/instructor-carousel";
 import { PublicCalendar } from "@/components/public-calendar";
 const REGISTRATION_URL = "https://my.e-ballroom.com/register?studio=4b9f0d88-9edc-4390-8998-93937355999e";
 const LOGIN_URL = "https://my.e-ballroom.com/login";
@@ -18,6 +19,7 @@ export default function HomePage() {
       </div>
       <div className="landing-image" role="img" aria-label="Warm country dance hall"/>
     </section>
+    <InstructorCarousel />
     <PublicCalendar />
     <section className="landing-offer">
       <p className="landing-eyebrow">SPURS OVER STETSONS</p>
