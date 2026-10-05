@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 export type InstructorRecord={id:string;public_name:string;bio:string;photo_url:string|null;active:boolean;sort_order:number};
 function Editor({person,onSaved}:{person?:InstructorRecord;onSaved:()=>void}){
@@ -8,7 +8,6 @@ function Editor({person,onSaved}:{person?:InstructorRecord;onSaved:()=>void}){
  return <div className="p-5"><form onSubmit={e=>{e.preventDefault();void submit(new FormData(e.currentTarget));}} className="grid gap-4 sm:grid-cols-2">
  {person&&<input type="hidden" name="id" value={person.id}/>}
  <div className="field"><label>Instructor name<input name="public_name" required minLength={2} maxLength={120} defaultValue={person?.public_name}/></label></div>
- <div className="field"><label>Display order<input name="sort_order" type="number" min={0} max={9999} defaultValue={person?.sort_order||0}/></label></div>
  <div className="field sm:col-span-2"><label>Biography<textarea name="bio" rows={5} maxLength={10000} defaultValue={person?.bio}/></label></div>
  <div className="field sm:col-span-2"><label>Instructor photo<input name="photo" type="file" accept="image/jpeg,image/png,image/webp" required={!person} onChange={async e=>{const file=e.target.files?.[0];if(!file)return;try{const bitmap=await createImageBitmap(file);setDimensions({width:bitmap.width,height:bitmap.height});bitmap.close();const reader=new FileReader();reader.onload=()=>setPreview(String(reader.result));reader.readAsDataURL(file);}catch{setMessage("Choose a valid image.");e.target.value="";}}}/></label><p className="text-sm text-[var(--muted)]">JPG, PNG, or WebP · up to 4 MB. Portrait photos work best; the full photo is preserved.</p></div>
  <input type="hidden" name="width" value={dimensions.width}/><input type="hidden" name="height" value={dimensions.height}/>
@@ -19,6 +18,16 @@ function Editor({person,onSaved}:{person?:InstructorRecord;onSaved:()=>void}){
 }
 export function InstructorManager({instructors}:{instructors:InstructorRecord[]}){
  const [adding,setAdding]=useState(false);const [generation,setGeneration]=useState(0);
+ const router=useRouter();const [moving,setMoving]=useState(false);const [refreshing,startTransition]=useTransition();const [orderMessage,setOrderMessage]=useState("");
+ async function move(id:string,direction:"up"|"down"){
+  setMoving(true);setOrderMessage("");
+  try{const fd=new FormData();fd.set("id",id);fd.set("action","move");fd.set("direction",direction);
+   const res=await fetch("/api/instructors",{method:"POST",body:fd});const json=await res.json();if(!res.ok)throw new Error(json.error||"Unable to move instructor.");
+   startTransition(()=>router.refresh());
+  }catch(error){setOrderMessage(error instanceof Error?error.message:"Unable to move instructor.");}finally{setMoving(false);}
+ }
+
  return <div className="space-y-4"><button className="btn btn-primary" onClick={()=>setAdding(!adding)}>{adding?"Close new instructor":"+ Add instructor"}</button>{adding&&<section className="panel"><h2 className="px-5 pt-5 text-xl font-bold">New instructor</h2><Editor key={generation} onSaved={()=>{setAdding(false);setGeneration(g=>g+1);}}/></section>}
- {instructors.map(person=><details key={person.id} className="panel overflow-hidden"><summary className="flex cursor-pointer items-center justify-between gap-3 p-5"><span className="font-bold">▸ {person.public_name}</span><span className="tag">{person.active?"Visible":"Hidden"}</span></summary><Editor person={person} onSaved={()=>{}}/></details>)}{!instructors.length&&<p className="empty">Add your first instructor to the website carousel.</p>}</div>
+ {orderMessage&&<p role="alert">{orderMessage}</p>}
+ {instructors.map((person,index)=><div key={person.id} className="flex items-start gap-2"><div className="flex flex-col gap-1 pt-2"><button type="button" className="btn" style={{minWidth:44,minHeight:44}} disabled={moving||refreshing||index===0} aria-label={`Move ${person.public_name} up`} onClick={()=>void move(person.id,"up")}>↑</button><button type="button" className="btn" style={{minWidth:44,minHeight:44}} disabled={moving||refreshing||index===instructors.length-1} aria-label={`Move ${person.public_name} down`} onClick={()=>void move(person.id,"down")}>↓</button></div><details className="panel min-w-0 flex-1 overflow-hidden"><summary className="flex cursor-pointer items-center justify-between gap-3 p-5"><span className="font-bold">▸ {person.public_name}</span><span className="tag">{person.active?"Visible":"Hidden"}</span></summary><Editor person={person} onSaved={()=>{}}/></details></div>)}{!instructors.length&&<p className="empty">Add your first instructor to the website carousel.</p>}</div>
 }
