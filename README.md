@@ -63,3 +63,11 @@ With Docker available, also run `npx supabase start`, `npx supabase db reset`, a
 - Instructor roster access is limited to assigned sessions; non-staff financial changes are rejected by a database trigger.
 - Atomic registration locks the session row, preventing concurrent capacity overflow.
 - No roles, sessions, or business records use localStorage.
+
+## Instructor media management
+
+Staff sign in at `/admin` and land at `/dashboard/instructors`. Each named accordion supports photo upload, biography editing, display order, visibility, and confirmed deletion. Public cards do not require an Auth account. Existing instructors retain their original photographs and crop settings; new photos preserve their full frame. Uploads accept JPG, PNG, and WebP up to 4 MB in the public `instructor-photos` bucket; writes require manager or master admin permissions. Deletion of an instructor assigned to classes is blocked until reassignment; hiding remains available.
+
+The homepage reads visible instructor records on each request. Successful mutations refresh both the manager and homepage. During a database outage only, the original instructor list is used as a continuity fallback.
+
+The previously empty hosted database was initialized from the existing backend schema in two stages (`initialize_instructor_backend`, `initialize_existing_backend_tables`), followed by instructor media, access corrections and signup intake. Their combined schema corresponds to the repository's original production migration plus subsequent migrations. Reconcile hosted migration history before using `supabase db push` on this existing project; fresh projects can apply repository migrations in order.
