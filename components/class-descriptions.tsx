@@ -6,7 +6,6 @@ export function ClassDescriptions() {
     <p className="landing-eyebrow">FIND YOUR NEXT STEP</p>
     <h2 id="classes-title">Our Dance Classes</h2>
     <div className="class-description-grid">{danceClasses.map(item => <article key={item.name} className="class-description-card">
-      <span className="class-description-icon" aria-hidden="true">{item.icon}</span>
       <h3>{item.name}</h3>
       <p className="class-description-tagline">{item.tagline}</p>
       {item.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}

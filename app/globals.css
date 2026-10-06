@@ -85,10 +85,10 @@ button,input,select,textarea{font:inherit}
 @media(max-width:600px){.calendar-grid{display:grid}.calendar-day,.calendar-blank{min-height:58px;padding:5px}.calendar-weekday{padding:8px 2px;font-size:.7rem}.calendar-day>time{font-size:.75rem}.calendar-event{padding:3px;font-size:.65rem}.calendar-event span{display:none}}
 
 /* Compact calendar and contained three-card agenda. */
-.public-calendar .calendar-toolbar{max-width:780px;margin:28px auto 16px;flex-direction:row;align-items:center}
+.public-calendar .calendar-toolbar{max-width:1240px;margin:28px auto 16px;flex-direction:row;align-items:center}
 .public-calendar .calendar-toolbar h3{font-size:clamp(1.15rem,4vw,1.8rem)}
 .public-calendar .calendar-toolbar .btn{min-width:44px;min-height:44px;padding:.5rem .7rem}
-.public-calendar .calendar-compact{max-width:780px;margin:auto;border:1px solid #6e502d;border-radius:12px;overflow:hidden;background:#130f0b;gap:1px}
+.public-calendar .calendar-compact{max-width:1240px;margin:auto;border:1px solid #6e502d;border-radius:12px;overflow:hidden;background:#130f0b;gap:1px}
 .calendar-compact .calendar-weekday{border:0;padding:12px 0;background:#2a2016;font-size:.72rem;letter-spacing:.05em}
 .public-calendar .calendar-compact .calendar-day,.public-calendar .calendar-compact .calendar-blank{aspect-ratio:1;min-height:0;padding:8px;border:0;border-radius:0;background:#1e1710;min-width:0}
 .public-calendar .calendar-compact .calendar-day{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--text)}
@@ -205,3 +205,12 @@ button,input,select,textarea{font:inherit}
 .class-modal h3{overflow-wrap:anywhere}
 .calendar-description-text{white-space:pre-line}
 @media(max-width:600px){.public-calendar .calendar-compact .calendar-day,.public-calendar .calendar-compact .calendar-blank,.calendar-day-trigger{min-height:94px}.calendar-day-trigger{padding:3px;gap:4px}.calendar-short-title{font-size:.55rem;padding:3px 1px}.calendar-day-more{font-size:.55rem}.class-modal-content{padding-top:52px}}
+
+@media(min-width:901px){
+.public-calendar .calendar-compact .calendar-day,.public-calendar .calendar-compact .calendar-blank,.calendar-day-trigger{min-height:145px}
+.calendar-day-trigger{padding:12px;gap:8px}
+.calendar-day-trigger>time{font-size:1.3rem}
+.calendar-short-title{font-size:.85rem;padding:6px}
+.calendar-day-more{font-size:.8rem}
+.calendar-compact .calendar-weekday{font-size:.9rem;padding:16px 0}
+}
