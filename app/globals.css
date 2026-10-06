@@ -179,3 +179,29 @@ button,input,select,textarea{font:inherit}
 .class-description-card .class-description-audience{border-top:1px solid #dccdb7;padding-top:16px;margin-bottom:0}
 @media(max-width:1100px){.class-description-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.class-descriptions{padding:55px 18px}.class-description-grid{grid-template-columns:1fr;gap:16px}.class-description-card{padding:24px}}
+
+/* Date previews and the calendar → date list → class details flow. */
+.public-calendar .calendar-compact{overflow:visible}
+.public-calendar .calendar-compact .calendar-day{position:relative;overflow:visible;padding:0;display:block;aspect-ratio:auto;min-height:110px;cursor:default}
+.public-calendar .calendar-compact .calendar-blank{aspect-ratio:auto;min-height:110px}
+.calendar-day-trigger{width:100%;height:100%;min-height:110px;border:0;background:transparent;color:inherit;padding:7px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;text-align:center}
+.calendar-day-trigger[aria-current=date]>time{text-decoration:underline;text-underline-offset:4px;font-weight:800}
+.calendar-day-titles{display:flex;flex-direction:column;gap:3px;width:100%;min-width:0}
+.calendar-short-title{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#bd894825;border-left:2px solid #d6a06b;padding:3px;font-size:.68rem;text-align:left}
+.calendar-day-more{font-size:.65rem;color:#e9c291;margin-top:auto}
+.calendar-hover-preview{display:none;position:absolute;z-index:20;top:calc(100% - 4px);left:0;width:300px;max-height:340px;overflow-y:auto;background:#20170f;color:#f1e7d3;padding:18px;border:1px solid #bd8948;border-radius:10px;box-shadow:0 12px 30px #0009;pointer-events:none;text-align:left}
+.calendar-hover-preview.preview-right{left:auto;right:0}
+.calendar-hover-preview p{margin:12px 0;display:flex;flex-direction:column;gap:3px;line-height:1.4;overflow-wrap:anywhere}
+.calendar-hover-preview small{color:#d4c3aa}
+@media(hover:hover) and (pointer:fine){.calendar-day:hover .calendar-hover-preview{display:block}}
+.calendar-date-list{display:grid;gap:12px}
+.calendar-date-class{display:flex;flex-direction:column;gap:8px;width:100%;padding:18px;text-align:left;background:#302318;color:#f1e7d3;border:1px solid #6e502d;border-radius:10px;cursor:pointer;white-space:normal;overflow-wrap:anywhere}
+.calendar-date-class:hover{background:#41301f}
+.calendar-date-class strong{font:1.25rem/1.4 Georgia,serif}
+.calendar-date-class span{font-size:.9rem;line-height:1.4;color:#d4c3aa}
+.calendar-date-class .calendar-detail-link{color:#e9c291;font-weight:700}
+.class-list-back{border:0;background:transparent;color:#e9c291;padding:0 0 22px;min-height:44px;cursor:pointer;text-align:left}
+.class-modal{overflow-y:auto;overscroll-behavior:contain}
+.class-modal h3{overflow-wrap:anywhere}
+.calendar-description-text{white-space:pre-line}
+@media(max-width:600px){.public-calendar .calendar-compact .calendar-day,.public-calendar .calendar-compact .calendar-blank,.calendar-day-trigger{min-height:94px}.calendar-day-trigger{padding:3px;gap:4px}.calendar-short-title{font-size:.55rem;padding:3px 1px}.calendar-day-more{font-size:.55rem}.class-modal-content{padding-top:52px}}

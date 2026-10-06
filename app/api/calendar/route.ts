@@ -6,6 +6,7 @@ const eventSchema = z.object({
   start: z.string().refine((value) => Number.isFinite(Date.parse(value))),
   end: z.string().nullable().optional(),
   extendedProps: z.object({
+    description: z.string().nullable().optional(),
     classType: z.string().optional(),
     instructorName: z.string().nullable().optional(),
     price: z.number().nullable().optional(),
