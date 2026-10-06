@@ -22,12 +22,12 @@ export default function ContactPage() {
             <p className="mt-1 text-sm font-semibold uppercase tracking-[.16em] text-[var(--accent2)]">Owners</p>
             <div className="mt-8 space-y-5 text-lg">
               <p><span className="block text-sm font-bold uppercase tracking-wider text-[var(--muted)]">Phone</span><a className="font-semibold hover:underline" href="tel:+13187877880">318-787-7880</a></p>
-              <p><span className="block text-sm font-bold uppercase tracking-wider text-[var(--muted)]">Email</span><a className="break-all font-semibold hover:underline" href="mailto:info@spursoverstetsons.com">info@spursoverstetsons.com</a></p>
+              <p><span className="block text-sm font-bold uppercase tracking-wider text-[var(--muted)]">Email</span><a className="break-all font-semibold hover:underline" href="mailto:spursoverstetsonsla@gmail.com">spursoverstetsonsla@gmail.com</a></p>
               <p><span className="block text-sm font-bold uppercase tracking-wider text-[var(--muted)]">Address</span><a className="font-semibold hover:underline" href={mapUrl} target="_blank" rel="noreferrer">3923 Independence Dr.<br />Alexandria, LA 71303</a></p>
             </div>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="tel:+13187877880" className="rounded-full bg-[var(--accent2)] px-6 py-3 font-bold text-black">Call Us</a>
-              <a href="mailto:info@spursoverstetsons.com" className="rounded-full border border-white/20 px-6 py-3 font-bold">Email Us</a>
+              <a href="mailto:spursoverstetsonsla@gmail.com" className="rounded-full border border-white/20 px-6 py-3 font-bold">Email Us</a>
               <a href={mapUrl} target="_blank" rel="noreferrer" className="rounded-full border border-white/20 px-6 py-3 font-bold">Get Directions</a>
             </div>
           </div>

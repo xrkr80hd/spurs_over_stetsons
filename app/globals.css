@@ -166,3 +166,16 @@ button,input,select,textarea{font:inherit}
 .public-calendar .calendar-compact .calendar-day,.public-calendar .calendar-compact .calendar-blank{aspect-ratio:auto;min-height:78px}
 .class-modal-content{padding:24px}
 }
+
+.class-descriptions{padding:80px 7vw;background:var(--paper);color:#1a140e;scroll-margin-top:90px}
+.class-descriptions>.landing-eyebrow{color:#805623}
+.class-descriptions>h2{font:400 clamp(2.5rem,5vw,4.6rem)/1.1 Georgia,serif;margin:0 0 36px}
+.class-description-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-bottom:32px}
+.class-description-card{padding:28px;background:#fff9ef;border:1px solid #c6b699;border-radius:12px}
+.class-description-icon{font-size:1.8rem}
+.class-description-card h3{font:400 1.8rem/1.2 Georgia,serif;margin:16px 0 12px}
+.class-description-card p{color:#594d3e;font-size:1rem;line-height:1.7;margin:0 0 16px}
+.class-description-card .class-description-tagline{color:#805623;font-weight:700}
+.class-description-card .class-description-audience{border-top:1px solid #dccdb7;padding-top:16px;margin-bottom:0}
+@media(max-width:1100px){.class-description-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.class-descriptions{padding:55px 18px}.class-description-grid{grid-template-columns:1fr;gap:16px}.class-description-card{padding:24px}}
