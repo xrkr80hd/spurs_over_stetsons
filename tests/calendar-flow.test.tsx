@@ -2,7 +2,7 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import { expect, it, vi } from "vitest";
-import { PublicCalendar } from "../components/public-calendar";
+import { CustomCalendar } from "../components/custom-calendar";
 
 it("shows every class and returns from details to the date list before closing", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
@@ -13,7 +13,7 @@ it("shows every class and returns from details to the date list before closing",
   HTMLDialogElement.prototype.close = function(){this.removeAttribute("open");};
   const host=document.createElement("div");document.body.append(host);const root=createRoot(host);
   try {
-    await act(async()=>{root.render(<PublicCalendar/>);});
+    await act(async()=>{root.render(<CustomCalendar/>);});
     expect(host.textContent).not.toContain("Classes at a Glance");
     const dateButton=host.querySelector(`button[aria-current="date"]`) as HTMLButtonElement;
     await act(async()=>dateButton.click());
