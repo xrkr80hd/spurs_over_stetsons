@@ -12,7 +12,7 @@ type DanceEvent = {
   extendedProps?: { description?: string | null; classType?: string; instructorName?: string | null; price?: number | null; spotsAvailable?: number | null };
 };
 function bookingUrl(event: DanceEvent) {
-  return "/book?" + new URLSearchParams({ title: event.title, date: studioDate(event.start), time: studioTime(event.start) + (event.end ? " – " + studioTime(event.end) : "") }).toString();
+  return "/book?" + new URLSearchParams({ classId: event.id, title: event.title, date: studioDate(event.start), time: studioTime(event.start) + (event.end ? " – " + studioTime(event.end) : "") }).toString();
 }
 const timeZone = "America/Chicago";
 const signup = "https://my.e-ballroom.com/register?studio=4b9f0d88-9edc-4390-8998-93937355999e";
@@ -152,7 +152,7 @@ function CalendarContent() {
         </>}
       </div>}
     </dialog>
-    <div className="calendar-account"><a href={signup}>New student? Create an account ↗</a><a href="https://my.e-ballroom.com/login">Already a student? Log in ↗</a></div>
+    <div className="calendar-account"><a href={signup}>New student? Create an account ↗</a><a href="https://my.e-ballroom.com/">Already a student? Log in ↗</a></div>
   </section>;
 }
 

@@ -71,3 +71,31 @@ Staff sign in at `/admin` and land at `/dashboard/instructors`. Each named accor
 The homepage reads visible instructor records on each request. Successful mutations refresh both the manager and homepage. During a database outage only, the original instructor list is used as a continuity fallback.
 
 The previously empty hosted database was initialized from the existing backend schema in two stages (`initialize_instructor_backend`, `initialize_existing_backend_tables`), followed by instructor media, access corrections and signup intake. Their combined schema corresponds to the repository's original production migration plus subsequent migrations. Reconcile hosted migration history before using `supabase db push` on this existing project; fresh projects can apply repository migrations in order.
+
+## eBallroom calendar booking handoff
+
+The public calendar is populated by eBallroom's read-only upcoming-classes API.
+Class selection now includes the eBallroom numeric class ID and preserves the
+displayed date and time on the site's booking page.
+
+To enable one-click handoff for a particular class, set the **server-only**
+`EBALLROOM_CLASS_BOOKING_LINKS_JSON` environment variable to a JSON object
+mapping the numeric eBallroom class ID to its **real, studio-provided**
+`https://my.e-ballroom.com/...` class-specific booking URL. Example structure:
+`{"12345":"https://my.e-ballroom.com/YOUR_VERIFIED_CLASS_BOOKING_LINK"}`
+(The value shown is an illustrative placeholder, not a working checkout link.)
+
+The booking page redirects immediately to the mapped class link when set.
+eBallroom controls the login session, registration and payments. No credentials
+are transmitted by this website.
+
+**Integration limitation:** The publicly documented eBallroom calendar API
+exposes class IDs but not deep links, customer authentication or a class
+registration/checkout endpoint. eBallroom documents direct sales-item links
+that continue through login to purchase, but a package purchase alone does
+**not** prove the customer has joined the exact class. Until the studio
+supplies and verifies a supported class-specific link, the booking page
+honestly shows eBallroom login and registration links without claiming to
+reserve seats or automatically continue into payment. Do not substitute
+a sales-item URL for a class reservation link unless the studio confirms
+its workflow. Class links must be updated for new eBallroom class IDs.

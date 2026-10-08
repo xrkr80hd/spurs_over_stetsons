@@ -22,6 +22,7 @@ it("shows every class and returns from details to the date list before closing",
     expect(host.querySelector("dialog")?.textContent).toContain("Test Instructor");
     expect(host.querySelector("dialog")?.textContent).toContain("Designed for brand-new dancers");
     expect(host.querySelector("dialog a")?.textContent).toContain("Sign Up");
+    expect((host.querySelector("dialog a.landing-action") as HTMLAnchorElement).getAttribute("href")).toContain("classId=0");
     await act(async()=>(host.querySelector(".class-modal-close") as HTMLButtonElement).click());
     expect(host.querySelectorAll(".calendar-date-class")).toHaveLength(4);
     expect(host.querySelector("dialog")?.hasAttribute("open")).toBe(true);
