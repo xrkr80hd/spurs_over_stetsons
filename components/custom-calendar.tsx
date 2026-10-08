@@ -11,9 +11,6 @@ type DanceEvent = {
   end?: string | null;
   extendedProps?: { description?: string | null; classType?: string; instructorName?: string | null; price?: number | null; spotsAvailable?: number | null };
 };
-function bookingUrl(event: DanceEvent) {
-  return "/book?" + new URLSearchParams({ classId: event.id, title: event.title, date: studioDate(event.start), time: studioTime(event.start) + (event.end ? " – " + studioTime(event.end) : "") }).toString();
-}
 const timeZone = "America/Chicago";
 const signup = "https://my.e-ballroom.com/register?studio=4b9f0d88-9edc-4390-8998-93937355999e";
 
@@ -95,6 +92,14 @@ function CalendarContent() {
   return <section id="calendar" className="public-calendar" aria-labelledby="calendar-title">
     <p className="landing-eyebrow">MEET US ON THE DANCE FLOOR</p>
     <h2 id="calendar-title">Events &amp; Schedule</h2>
+    <aside className="calendar-booking-notice" aria-label="Class booking information">
+      <h3>How to book your class</h3>
+      <p>This public calendar shows what is scheduled. Viewing a class here does not reserve your place or confirm payment.</p>
+      <p>To sign up, sign in to your e‑Ballroom account, find the same class on the e‑Ballroom calendar, and complete registration and payment there. Your class selection on this website will not carry over automatically.</p>
+      <p>Registration and payment are handled directly in your e‑Ballroom account; this public calendar does not collect payment information.</p>
+      <p>We apologize for any confusion with booking. This is new software for our studio, and we are working with e‑Ballroom to resolve the connection so booking is easier.</p>
+      <div className="calendar-account"><a className="landing-action" href="https://my.e-ballroom.com/login">Sign in to e‑Ballroom ↗</a><a href={signup}>New student? Create an account ↗</a></div>
+    </aside>
     <p>Hover over a date to preview classes. Click or tap a date for the full list. All times are Central.</p>
     <div className="calendar-toolbar">
       <h3>{monthLabel(month)}</h3>
@@ -138,7 +143,7 @@ function CalendarContent() {
           <ClassDetail event={activeEvent}/>
           {activeEvent.extendedProps?.price != null && <p>{new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(activeEvent.extendedProps.price)}</p>}
           {activeEvent.extendedProps?.spotsAvailable != null && <p>{activeEvent.extendedProps.spotsAvailable > 0 ? activeEvent.extendedProps.spotsAvailable + " spots available" : "Currently full"}</p>}
-          <a className="landing-action" href={bookingUrl(activeEvent)}>{activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "View Availability" : "Sign Up for This Class"} ↗</a>
+          <a className="landing-action" href="https://my.e-ballroom.com/login">{activeEvent.extendedProps?.spotsAvailable != null && activeEvent.extendedProps.spotsAvailable <= 0 ? "Check Availability in e‑Ballroom" : "Sign in to e‑Ballroom to Book"} ↗</a>
         </> : <>
           <p className="landing-eyebrow">CLASSES &amp; DANCES</p>
           <h3 id="class-modal-title" tabIndex={-1} ref={node => node?.focus()}>{dateLabel(openDate)}</h3>
