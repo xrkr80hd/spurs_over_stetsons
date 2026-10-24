@@ -7,3 +7,12 @@ coverage/
 *.log
 *.tsbuildinfo
 .vercel/
+
+# Ignore all local environment files except safe templates
+.env*
+!.env.example
+
+# Operating system metadata
+.DS_Store
+._*
+Thumbs.db
